@@ -20,3 +20,13 @@ export const signupSchema = joi.object().keys({
     .required(),
   confirmPassword: joi.string().required(),
 });
+
+export const signinSchema = joi.object().keys({
+  username: joi
+    .string()
+    .regex(/^\S+$/)
+    .message("please remove spaces!")
+    .min(4)
+    .required(),
+  password: joi.string().required(),
+});

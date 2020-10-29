@@ -1,6 +1,8 @@
 import model from "../db/models";
 import bcrypt from "bcrypt";
+import dotenv from "dotenv";
 
+dotenv.config();
 const { User } = model;
 
 /**
@@ -14,7 +16,7 @@ class UserService {
    */
   static async createUser(userInfo) {
     const { firstName, lastName, username, email, gender, password } = userInfo;
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, process.env.HASH_ROUND);
     const newUser = {
       firstName,
       lastName,

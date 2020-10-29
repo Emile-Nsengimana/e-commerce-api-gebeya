@@ -57,6 +57,17 @@
           "type": "string"
         }
       }
+    },
+    "user_signin": {
+      "required": ["username", "password"],
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
     }
   },
   "paths": {
@@ -82,6 +93,38 @@
           },
           "409": {
             "description": "username already taken, Please choose another!"
+          }
+        }
+      }
+    },
+    "/api/auth/signin": {
+      "post": {
+        "tags": ["User"],
+        "description": "User signin",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "user signin",
+            "require": true,
+            "schema": {
+              "$ref": "#/definitions/user_signin"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successfully logged in"
+          },
+          "404": {
+            "description": "not found"
+          },
+          "401": {
+            "description": "unautorized"
+          },
+          "500": {
+            "description": "server error"
           }
         }
       }
