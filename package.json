@@ -1,0 +1,35 @@
+{
+  "name": "e-commerce-api-gebeya",
+  "version": "1.0.0",
+  "description": "A simple APIs that enlists ecommerce items and handles purchase details",
+  "main": "server.js",
+  "repository": "https://github.com/Emile-Nsengimana/e-commerce-api-gebeya.git",
+  "author": "Emile-Nsengimana <emilereas7@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node build/server.js",
+    "build": "babel src --out-dir build",
+    "dev": "nodemon --exec babel-node ./src/server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "joi": "^17.3.0",
+    "json-web-token": "^3.2.0",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.3.5"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/node": "^7.12.1",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/register": "^7.12.1",
+    "nodemon": "^2.0.6",
+    "sequelize-cli": "^6.2.0"
+  }
+}
