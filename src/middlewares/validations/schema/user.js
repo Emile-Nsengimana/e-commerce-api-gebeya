@@ -1,5 +1,6 @@
 import joi from "joi";
 
+// signup schema for validation
 export const signupSchema = joi.object().keys({
   firstName: joi.string().min(4).alphanum().required(),
   lastName: joi.string().min(4).alphanum().required(),
@@ -11,6 +12,7 @@ export const signupSchema = joi.object().keys({
     .required(),
   email: joi.string().email().insensitive(),
   gender: joi.any().valid("male", "female"),
+  role: joi.any().valid("buyer", "vendor"),
   password: joi
     .string()
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/)
@@ -21,6 +23,7 @@ export const signupSchema = joi.object().keys({
   confirmPassword: joi.string().required(),
 });
 
+// signin schema for validation
 export const signinSchema = joi.object().keys({
   username: joi
     .string()

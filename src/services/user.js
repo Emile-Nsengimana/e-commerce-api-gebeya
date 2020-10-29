@@ -3,20 +3,27 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 
 dotenv.config();
+
 const { User } = model;
 
-/**
- * User service
- */
 class UserService {
-  /**
-   *
-   * @param {Object} user
-   * @returns {Object} created user
-   */
-  static async createUser(userInfo) {
-    const { firstName, lastName, username, email, gender, password } = userInfo;
-    const hashedPassword = await bcrypt.hash(password, process.env.HASH_ROUND);
+  // save user to database
+  static async saveUser(userInfo) {
+    const {
+      firstName,
+      lastName,
+      username,
+      email,
+      gender,
+      password,
+      role,
+    } = userInfo;
+
+    // hash password
+    const hashedPassword = await bcrypt.hash(
+      password,
+      parseInt(process.env.SALT, 10)
+    );
     const newUser = {
       firstName,
       lastName,
@@ -24,18 +31,14 @@ class UserService {
       email,
       gender,
       passkey: hashedPassword,
-      role: "client",
+      role,
     };
     const user = (await User.create(newUser)).get({ plain: true });
     return user;
   }
 
-  /**
-   *
-   * @param {Object} user
-   * @returns {Object} user
-   */
-  static async getUser(username) {
+  // retrieve user from database
+  static async findUser(username) {
     const user = await User.findOne({
       raw: true,
       where: { username },

@@ -2,15 +2,8 @@ import jwt from "json-web-token";
 import dotenv from "dotenv";
 
 dotenv.config();
-/**
- * generate and verify token
- */
+
 class TokenHandler {
-  /**
-   *
-   * @param {object} payload
-   * @returns {string} token
-   */
   static async generateToken(payload) {
     try {
       const accessToken = await jwt.encode(
@@ -23,11 +16,7 @@ class TokenHandler {
     }
   }
 
-  /**
-   *
-   * @param {object} token
-   * @returns {object} verified token
-   */
+  //  verifys the validity of the token
   static async verifyToken(accessToken) {
     const payload = await jwt.decode(
       process.env.ACCESS_TOKEN_SECRET,

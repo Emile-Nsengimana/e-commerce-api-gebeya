@@ -68,6 +68,29 @@
           "type": "string"
         }
       }
+    },
+    "item": {
+      "required": ["name", "status", "quantity", "price", "description"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "string"
+        },
+        "price": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "image": {
+          "type": "file"
+        }
+      }
     }
   },
   "paths": {
@@ -125,6 +148,25 @@
           },
           "500": {
             "description": "server error"
+          }
+        }
+      }
+    },
+    "/api/item": {
+      "post": {
+        "tags": ["Item"],
+        "description": "Add item",
+        "parameters": [
+          {
+            "name": "image",
+            "in": "formData",
+            "description": "add item",
+            "require": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "item added successful"
           }
         }
       }
