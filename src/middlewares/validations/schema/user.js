@@ -10,6 +10,7 @@ export const signupSchema = joi.object().keys({
     .min(4)
     .required(),
   email: joi.string().email().insensitive(),
+  gender: joi.any().valid("male", "female"),
   password: joi
     .string()
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/)

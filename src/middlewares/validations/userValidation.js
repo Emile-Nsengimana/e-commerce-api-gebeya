@@ -18,6 +18,7 @@ class UserValidation {
         lastName: req.body.lastName,
         username: req.body.username,
         email: req.body.email,
+        gender: req.body.gender,
         password: req.body.password,
         confirmPassword: req.body.confirmPassword,
       };

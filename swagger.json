@@ -1,0 +1,90 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Gebeya e-commerce APIs Documentation",
+    "version": "1.0.0",
+    "description": "A simple APIs that enlists e-commerce items and handles purchase details."
+  },
+  "host": "localhost:5000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "User",
+      "description": "user APIs"
+    },
+    {
+      "name": "Item",
+      "description": "item APIs"
+    },
+    {
+      "name": "Cart",
+      "description": "cart APIs"
+    }
+  ],
+  "schemes": ["https", "http"],
+  "consumes": ["application/json", "application/xml"],
+  "produces": ["application/json", "application/xml"],
+  "definitions": {
+    "user_signup": {
+      "required": [
+        "firstName",
+        "lastName",
+        "username",
+        "email",
+        "password",
+        "confirmPassword"
+      ],
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "confirmPassword": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/auth/signup": {
+      "post": {
+        "tags": ["User"],
+        "description": "User signup",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "user signup",
+            "require": true,
+            "schema": {
+              "$ref": "#/definitions/user_signup"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "201": {
+            "description": "thank you for joining us"
+          },
+          "409": {
+            "description": "username already taken, Please choose another!"
+          }
+        }
+      }
+    }
+  }
+}
