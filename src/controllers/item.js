@@ -3,6 +3,8 @@ import { uploader } from "../middlewares/cloudinary";
 import path from "path";
 import imageDataURI from "image-data-uri";
 import ItemService from "../services/item";
+import imageUploader from "../helpers/imageUploader";
+import { exist } from "joi";
 
 const { Item } = model;
 
@@ -23,16 +25,12 @@ class ItemManager {
             "you have added this item before! please update the quantity instead",
         });
 
-      // get image file from the request
-      const image = req.file;
-      const dataBuffer = new Buffer.from(image.buffer);
-      const mediaType = path.extname(image.originalname).toString();
-      const imageData = imageDataURI.encode(dataBuffer, mediaType);
+      if (req.file) {
+        const imageUrl = await imageUploader(req.file);
+        req.body.photo = imageUrl;
+      }
 
-      // uploads image to cloudinary
-      const uploadedImage = await uploader.upload(imageData);
-
-      await ItemService.saveItem(req.body, uploadedImage.url, itemOwner);
+      await ItemService.saveItem(req.body, itemOwner);
       return res.status(201).json({
         message: "item added successful",
       });
@@ -112,6 +110,49 @@ class ItemManager {
     } catch (error) {
       return res.status(500).json({
         error: "server error, please try again later",
+      });
+    }
+  }
+
+  static async updateItem(req, res) {
+    try {
+      const { itemId } = req.params;
+
+      // check if the item exist
+      const item = await Item.findOne({ where: { id: itemId } });
+      if (!item) return res.status(404).json({ error: "item not found" });
+
+      // check for an image in the req
+      if (req.file) {
+        const imageUrl = await imageUploader(req.file);
+        req.body.photo = imageUrl;
+      }
+
+      // checks if the user updating the item is the owner
+      if (req.user.id !== item.vendorId)
+        return res.status(403).json({
+          error: "you are not authorized to update this item",
+        });
+
+      // update the item
+      const updatedItem = await item.update(
+        {
+          name: req.body.name || item.name,
+          status: req.body.status || item.status,
+          quantity: req.body.quantity || item.quantity,
+          price: req.body.price || item.price,
+          description: req.body.description || item.description,
+        },
+        { where: { id: itemId }, returning: true, plain: true }
+      );
+
+      return res.status(200).json({
+        message: "item updated successfully",
+        item: updatedItem,
+      });
+    } catch (error) {
+      return res.status(200).json({
+        error,
       });
     }
   }

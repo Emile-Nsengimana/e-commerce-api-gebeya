@@ -9,12 +9,11 @@ const { Item, User } = model;
 
 class ItemService {
   // save item to database
-  static async saveItem(itemInfo, imageUrl, itemOwner) {
+  static async saveItem(itemInfo, itemOwner) {
     const item = (
       await Item.create({
         ...itemInfo,
         vendorId: itemOwner.id,
-        photo: imageUrl,
       })
     ).get({
       plain: true,
@@ -82,6 +81,23 @@ class ItemService {
       where: { id: itemId },
     });
     return deletedItem;
+  }
+
+  // update item
+  static async updateItem(itemInfo, itemId) {
+    const item = await Item.findOne({
+      where: { id: itemId },
+    });
+    if (item) {
+      item.update({
+        name: itemInfo.name || item.name,
+        status: itemInfo.status || item.status,
+        quantity: itemInfo.quantity || item.quantity,
+        price: itemInfo.price || item.price,
+        description: itemInfo.description || item.description,
+      });
+    }
+    return item;
   }
 }
 export default ItemService;

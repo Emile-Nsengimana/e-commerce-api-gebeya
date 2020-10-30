@@ -17,5 +17,11 @@ router.post(
 router.get("/", ItemManager.getItems);
 router.get("/:itemId", ItemManager.getItem);
 router.delete("/:itemId", ItemManager.deleteItem);
+router.put(
+  "/update/:itemId",
+  multerUpload,
+  ItemValidation.updateItemValidator,
+  ItemManager.updateItem
+);
 
 export default router;
