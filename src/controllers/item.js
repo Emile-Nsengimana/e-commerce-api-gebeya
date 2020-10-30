@@ -37,7 +37,6 @@ class ItemManager {
         message: "item added successful",
       });
     } catch (error) {
-      console.log(error);
       return res.status(500).json({
         error: "Server error",
       });
@@ -81,6 +80,38 @@ class ItemManager {
     } catch (error) {
       return res.status(500).json({
         error: "Server error",
+      });
+    }
+  }
+
+  static async deleteItem(req, res) {
+    try {
+      const { itemId } = req.params;
+
+      // check if the item exist
+      const item = await ItemService.findItem(itemId);
+      if (!item)
+        return res.status(404).json({
+          error: "the item you are trying to delete doesn't exist",
+        });
+
+      // makes sure thats only the owner can delete the item
+      const { fullName } = item.dataValues.vendor.dataValues;
+      if (req.user.fullName !== fullName)
+        return res.status(401).json({
+          error: "not allowed to delete this item",
+        });
+
+      // delete the item
+      const deletedItem = await ItemService.deleteItem(itemId);
+      if (deletedItem) {
+        return res.status(200).json({
+          message: "item deleted successful",
+        });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        error: "server error, please try again later",
       });
     }
   }

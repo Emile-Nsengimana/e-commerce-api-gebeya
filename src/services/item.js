@@ -58,7 +58,7 @@ class ItemService {
         {
           as: "vendor",
           model: User,
-          attributes: ["firstName", "lastName"],
+          attributes: ["fullName"],
         },
       ],
     });
@@ -74,6 +74,14 @@ class ItemService {
       },
     });
     return vendorItem;
+  }
+
+  // delete item from database
+  static async deleteItem(itemId) {
+    const deletedItem = await Item.destroy({
+      where: { id: itemId },
+    });
+    return deletedItem;
   }
 }
 export default ItemService;
