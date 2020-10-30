@@ -1,6 +1,9 @@
 import model from "../db/models";
 import CartService from "../services/cart";
 import ItemService from "../services/item";
+import Sequelize from "sequelize";
+
+const { Op } = Sequelize;
 
 const { Cart, Item, User } = model;
 
@@ -30,6 +33,43 @@ class CartManager {
       });
     } catch (error) {
       return res.status(500).json({
+        error: "Server error",
+      });
+    }
+  }
+
+  static async addItemsToCart(req, res) {
+    try {
+      const { items } = req.body;
+      const buyer = req.user;
+      const allItems = [];
+
+      // retrieve details of items to add on cart
+      const allItemToAdd = items.map(async (item) => {
+        const singleItem = await Item.findOne({
+          where: { id: item.id },
+          raw: true,
+        });
+        allItems.push(singleItem);
+      });
+      await Promise.all(allItemToAdd);
+    
+      // adds all items to cart
+      const cartItems = allItems.map(async (item, index) => {
+         const cart = await CartService.saveToCart(
+          item,
+          items[index].quantity,
+          buyer.id
+        );
+       });
+      await Promise.all(cartItems);
+
+      return res.status(201).json({
+        message: "all items added to cart successful",
+        cart: cartItems,
+      });
+    } catch (error) {
+       return res.status(500).json({
         error: "Server error",
       });
     }

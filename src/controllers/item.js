@@ -1,10 +1,6 @@
 import model from "../db/models";
-import { uploader } from "../middlewares/cloudinary";
-import path from "path";
-import imageDataURI from "image-data-uri";
 import ItemService from "../services/item";
 import imageUploader from "../helpers/imageUploader";
-import { exist } from "joi";
 
 const { Item } = model;
 
