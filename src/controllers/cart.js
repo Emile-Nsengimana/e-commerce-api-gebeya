@@ -53,23 +53,22 @@ class CartManager {
         allItems.push(singleItem);
       });
       await Promise.all(allItemToAdd);
-    
+
       // adds all items to cart
       const cartItems = allItems.map(async (item, index) => {
-         const cart = await CartService.saveToCart(
+        const cart = await CartService.saveToCart(
           item,
           items[index].quantity,
           buyer.id
         );
-       });
+      });
       await Promise.all(cartItems);
 
       return res.status(201).json({
         message: "all items added to cart successful",
-        cart: cartItems,
       });
     } catch (error) {
-       return res.status(500).json({
+      return res.status(500).json({
         error: "Server error",
       });
     }

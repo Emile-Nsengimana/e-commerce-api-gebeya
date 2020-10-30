@@ -27,18 +27,14 @@
   "definitions": {
     "user_signup": {
       "required": [
-        "firstName",
-        "lastName",
+        "fullName",
         "username",
         "email",
         "password",
         "confirmPassword"
       ],
       "properties": {
-        "firstName": {
-          "type": "string"
-        },
-        "lastName": {
+        "fullName": {
           "type": "string"
         },
         "gender": {
@@ -79,10 +75,10 @@
           "type": "string"
         },
         "quantity": {
-          "type": "string"
+          "type": "number"
         },
         "price": {
-          "type": "string"
+          "type": "number"
         },
         "description": {
           "type": "string"
@@ -96,6 +92,22 @@
       "required": ["token"],
       "properties": {
         "token": {
+          "type": "string"
+        }
+      }
+    },
+    "cart_item": {
+      "required": ["quantity"],
+      "properties": {
+        "quantity": {
+          "type": "number"
+        }
+      }
+    },
+    "cart_items": {
+      "required": ["items"],
+      "properties": {
+        "items": {
           "type": "string"
         }
       }
@@ -166,10 +178,19 @@
         "description": "Add item",
         "parameters": [
           {
-            "name": "image",
-            "in": "formData",
-            "description": "add item",
+            "name": "authorization",
+            "in": "header",
+            "description": "access token",
             "require": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "add item",
+            "require": true,
+            "schema": {
+              "$ref": "#/definitions/item"
+            }
           }
         ],
         "responses": {
@@ -227,6 +248,190 @@
           },
           "404": {
             "description": "item not found"
+          }
+        }
+      }
+    },
+    "/api/item/{id}": {
+      "delete": {
+        "tags": ["Item"],
+        "description": "Delete an item",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "unique item id",
+            "require": true
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "access token",
+            "require": true
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successfull operation"
+          },
+          "404": {
+            "description": "item not found"
+          }
+        }
+      }
+    },
+    "/api/item/update/{itemId}": {
+      "put": {
+        "tags": ["Item"],
+        "description": "update item",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "access token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "description": "unique item id",
+            "require": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "new item info",
+            "schema": {
+              "$ref": "#/definitions/item"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successfull operation"
+          },
+          "401": {
+            "description": "unautorized"
+          }
+        }
+      }
+    },
+    "/api/cart/{itemId}": {
+      "post": {
+        "tags": ["Cart"],
+        "description": "Add item to cart",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "access token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "description": "unique item id",
+            "require": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "item quantity",
+            "schema": {
+              "$ref": "#/definitions/cart_item"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "201": {
+            "description": "successfull operation"
+          }
+        }
+      }
+    },
+    "/api/cart/": {
+      "get": {
+        "tags": ["Cart"],
+        "description": "Gets buyer cart",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "access token",
+            "require": true
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successfull operation"
+          },
+          "404": {
+            "description": "no available item found"
+          }
+        }
+      }
+    },
+    "/api/cart/{itemName}": {
+      "delete": {
+        "tags": ["Cart"],
+        "description": "Remove item from buyer cart",
+        "parameters": [
+          {
+            "name": "itemName",
+            "in": "path",
+            "description": "item name",
+            "require": true
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "access token",
+            "require": true
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successfull operation"
+          },
+          "404": {
+            "description": "no available item found"
+          }
+        }
+      }
+    },
+    "/api/cart": {
+      "post": {
+        "tags": ["Cart"],
+        "description": "Add multiple items to cart",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "access token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "item quantity",
+            "schema": {
+              "type": "array",
+              "$ref": "#/definitions/cart_items"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "201": {
+            "description": "successfull operation"
           }
         }
       }
