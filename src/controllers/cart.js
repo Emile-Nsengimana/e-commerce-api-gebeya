@@ -29,7 +29,6 @@ class CartManager {
         cart,
       });
     } catch (error) {
-      console.log(error);
       return res.status(500).json({
         error: "Server error",
       });
@@ -51,6 +50,43 @@ class CartManager {
     } catch (error) {
       return res.status(500).json({
         error: "Server error",
+      });
+    }
+  }
+
+  static async removeCartItem(req, res) {
+    try {
+      const { itemName } = req.params;
+
+      // check if the item exist on the cart
+      // remove the item and update the total price
+      const buyerCart = await CartService.findCart(req.user.id);
+
+      const itemOnCart = buyerCart.dataValues.products;
+      if (itemOnCart[itemName]) {
+        const deletedItemPrice =
+          itemOnCart[itemName].price * itemOnCart[itemName].quantity;
+
+        delete itemOnCart[itemName];
+        const oldTotalPrice = buyerCart.dataValues.totalPrice;
+        const updatedCart = await buyerCart.update({
+          returning: true,
+          plain: true,
+          products: { ...itemOnCart },
+          totalPrice: oldTotalPrice - deletedItemPrice,
+        });
+
+        return res.status(200).json({
+          message: "item removed successful",
+          cart: updatedCart,
+        });
+      }
+      return res.status(404).json({
+        error: "item not on your cart",
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: "server error, please try again later",
       });
     }
   }
