@@ -14,5 +14,7 @@ router.post(
   ItemValidation.itemValidator,
   ItemManager.addItem
 );
+router.get("/", ItemManager.getItems);
+router.get("/:itemId", ItemManager.getItem);
 
 export default router;

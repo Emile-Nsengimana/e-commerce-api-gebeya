@@ -91,6 +91,14 @@
           "type": "file"
         }
       }
+    },
+    "getItems": {
+      "required": ["token"],
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
     }
   },
   "paths": {
@@ -112,10 +120,10 @@
         "produces": ["application/json"],
         "responses": {
           "201": {
-            "description": "thank you for joining us"
+            "description": "successfull operation"
           },
           "409": {
-            "description": "username already taken, Please choose another!"
+            "description": "conflict"
           }
         }
       }
@@ -138,7 +146,7 @@
         "produces": ["application/json"],
         "responses": {
           "200": {
-            "description": "successfully logged in"
+            "description": "successfull operation"
           },
           "404": {
             "description": "not found"
@@ -167,6 +175,58 @@
         "responses": {
           "201": {
             "description": "item added successful"
+          }
+        }
+      }
+    },
+    "/api/item/": {
+      "get": {
+        "tags": ["Item"],
+        "description": "Gets a detailed list of available items",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "access token",
+            "require": true
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successfull operation"
+          },
+          "404": {
+            "description": "no available item found"
+          }
+        }
+      }
+    },
+    "/api/item/{itemId}": {
+      "get": {
+        "tags": ["Item"],
+        "description": "Gets a specific item info",
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "description": "unique item id",
+            "require": true
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "access token",
+            "require": true
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successfull operation"
+          },
+          "404": {
+            "description": "item not found"
           }
         }
       }

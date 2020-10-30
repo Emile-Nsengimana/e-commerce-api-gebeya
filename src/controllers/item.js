@@ -19,11 +19,48 @@ class ItemManager {
       const uploadedImage = await uploader.upload(imageData);
 
       await ItemService.saveItem(req.body, uploadedImage.url);
-      return res.status(201).send({
+      return res.status(201).json({
         message: "item added successful",
       });
     } catch (error) {
-      return res.status(500).send({
+      return res.status(500).json({
+        error: "Server error",
+      });
+    }
+  }
+
+  // retrieve available items
+  static async getItems(req, res) {
+    try {
+      const items = await ItemService.findAvailableItems();
+      if (items.length === 0)
+        return res.status(404).json({
+          error: "no available item found",
+        });
+      return res.status(200).json({
+        items,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: "Server error",
+      });
+    }
+  }
+
+  // retrieve a specific item
+  static async getItem(req, res) {
+    const { itemId } = req.params;
+    try {
+      const item = await ItemService.findItem(itemId);
+      if (!item)
+        return res.status(404).json({
+          error: "item not found",
+        });
+      return res.status(200).json({
+        item,
+      });
+    } catch (error) {
+      return res.status(500).json({
         error: "Server error",
       });
     }
