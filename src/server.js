@@ -1,9 +1,10 @@
+import "regenerator-runtime/runtime.js";
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import swaggerUI from "swagger-ui-express";
 import swaggerJSDoc from "../swagger.json";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import routes from "./routes";
 
 dotenv.config();
@@ -17,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(routes);
 
 // Swagger ui documentation
-app.use('/', swaggerUI.serve, swaggerUI.setup(swaggerJSDoc));
+app.use("/", swaggerUI.serve, swaggerUI.setup(swaggerJSDoc));
 
 app.get("*", (req, res) =>
   res.status(200).send({

@@ -17,6 +17,13 @@ class ItemValidation {
         }
         return res.status(400).json({ error: errors });
       }
+
+      // checks if the user adding the item is a vendor
+      if (req.user.role !== "vendor")
+        return res.status(403).json({
+          message: "you are not authorized to add an item",
+        });
+
       next();
     } catch (error) {
       return res.status(500).json({ error: "server error" });

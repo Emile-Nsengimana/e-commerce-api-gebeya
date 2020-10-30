@@ -9,15 +9,7 @@ const { User } = model;
 class UserService {
   // save user to database
   static async saveUser(userInfo) {
-    const {
-      firstName,
-      lastName,
-      username,
-      email,
-      gender,
-      password,
-      role,
-    } = userInfo;
+    const { fullName, username, email, gender, password, role } = userInfo;
 
     // hash password
     const hashedPassword = await bcrypt.hash(
@@ -25,13 +17,8 @@ class UserService {
       parseInt(process.env.SALT, 10)
     );
     const newUser = {
-      firstName,
-      lastName,
-      username,
-      email,
-      gender,
+      ...userInfo,
       passkey: hashedPassword,
-      role,
     };
     const user = (await User.create(newUser)).get({ plain: true });
     return user;

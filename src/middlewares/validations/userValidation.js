@@ -7,8 +7,7 @@ class UserValidation {
     const { body } = req;
     try {
       const user = {
-        firstName: body.firstName,
-        lastName: body.lastName,
+        fullName: body.fullName,
         username: body.username,
         email: body.email,
         gender: body.gender,

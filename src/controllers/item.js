@@ -9,6 +9,20 @@ const { Item } = model;
 class ItemManager {
   static async addItem(req, res) {
     try {
+      const itemOwner = req.user;
+
+      // check if the vendor has the item
+      const itemExit = await ItemService.findVendorItem(
+        itemOwner.id,
+        req.body.name
+      );
+
+      if (itemExit)
+        return res.status(409).json({
+          error:
+            "you have added this item before! please update the quantity instead",
+        });
+
       // get image file from the request
       const image = req.file;
       const dataBuffer = new Buffer.from(image.buffer);
@@ -18,11 +32,12 @@ class ItemManager {
       // uploads image to cloudinary
       const uploadedImage = await uploader.upload(imageData);
 
-      await ItemService.saveItem(req.body, uploadedImage.url);
+      await ItemService.saveItem(req.body, uploadedImage.url, itemOwner);
       return res.status(201).json({
         message: "item added successful",
       });
     } catch (error) {
+      console.log(error);
       return res.status(500).json({
         error: "Server error",
       });
@@ -32,10 +47,14 @@ class ItemManager {
   // retrieve available items
   static async getItems(req, res) {
     try {
-      const items = await ItemService.findAvailableItems();
-      if (items.length === 0)
+      const page = parseInt(req.query.page, 10);
+      const limit = parseInt(req.query.limit, 10);
+      const order = req.query.order;
+
+      const items = await ItemService.findAvailableItems(page, limit, order);
+      if (items.length === 0 || typeof items === "string")
         return res.status(404).json({
-          error: "no available item found",
+          error: typeof items === "string" ? items : "no available item found",
         });
       return res.status(200).json({
         items,

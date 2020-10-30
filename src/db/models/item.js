@@ -1,38 +1,26 @@
-"use strict";
-const { Model } = require("sequelize");
-module.exports = (sequelize, DataTypes) => {
-  class Item extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-      Item.belongsTo(models.User, {
-        as: "vendor",
-        foreignKey: "id",
-        onDelete: "CASCADE",
-      });
-    }
-  }
-  Item.init(
-    {
-      name: DataTypes.STRING,
-      description: DataTypes.TEXT,
-      price: DataTypes.FLOAT,
-      photo: DataTypes.STRING,
-      status: {
-        type: DataTypes.ENUM,
-        values: ["available", "sold", "expired"],
-        defaultValue: "available"
-      },
-      quantity: DataTypes.INTEGER,
+export default (sequelize, DataTypes) => {
+  const Item = sequelize.define("Item", {
+    name: DataTypes.STRING,
+    description: DataTypes.TEXT,
+    price: DataTypes.FLOAT,
+    photo: DataTypes.STRING,
+    status: {
+      type: DataTypes.ENUM,
+      values: ["available", "sold", "expired"],
+      defaultValue: "available",
     },
-    {
-      sequelize,
-      modelName: "Item",
-    }
-  );
+    quantity: DataTypes.INTEGER,
+    vendorId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  });
+  Item.associate = function (models) {
+    Item.belongsTo(models.User, {
+      as: "vendor",
+      foreignKey: "vendorId",
+      onDelete: "CASCADE",
+    });
+  };
   return Item;
 };

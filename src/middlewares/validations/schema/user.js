@@ -2,13 +2,13 @@ import joi from "joi";
 
 // signup schema for validation
 export const signupSchema = joi.object().keys({
-  firstName: joi.string().min(4).alphanum().required(),
-  lastName: joi.string().min(4).alphanum().required(),
+  fullName: joi.string().min(4).required(),
   username: joi
     .string()
     .regex(/^\S+$/)
     .message("please remove spaces between word!")
     .min(4)
+    .alphanum()
     .required(),
   email: joi.string().email().insensitive(),
   gender: joi.any().valid("male", "female"),

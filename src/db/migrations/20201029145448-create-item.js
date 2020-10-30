@@ -27,6 +27,15 @@ module.exports = {
       quantity: {
         type: Sequelize.INTEGER,
       },
+      vendorId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        onDelete: "CASCADE",
+        references: {
+          model: "Users",
+          key: "id",
+        },
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

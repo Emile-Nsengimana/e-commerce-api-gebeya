@@ -10,8 +10,8 @@ class UserManager {
 
       // generate token
       const token = await TokenHandler.generateToken({
-        firstName: userInfo.firstName,
-        lastName: userInfo.lastName,
+        id: userInfo.id,
+        fullName: userInfo.fullName,
         username: userInfo.username,
         role: userInfo.role,
       });
@@ -28,7 +28,7 @@ class UserManager {
   static async signin(req, res) {
     try {
       const { username, password } = req.body;
-      const user = await UserService.getUser(username.trim());
+      const user = await UserService.findUser(username.trim());
       if (user === null)
         return res.status(404).json({ error: `user ${username} not found` });
 
@@ -37,10 +37,10 @@ class UserManager {
 
       // generate token
       const token = await TokenHandler.generateToken({
-        firstName: user.firstName,
-        lastName: user.lastName,
+        id: user.id,
+        fullName: user.fullName,
         username: user.username,
-        type: user.type,
+        role: user.role,
       });
 
       return res.status(200).json({
