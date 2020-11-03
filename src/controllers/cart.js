@@ -1,11 +1,7 @@
 import model from "../db/models";
 import CartService from "../services/cart";
-import ItemService from "../services/item";
-import Sequelize from "sequelize";
 
-const { Op } = Sequelize;
-
-const { Cart, Item, User } = model;
+const { Item } = model;
 
 class CartManager {
   static async addToCart(req, res) {
@@ -50,8 +46,10 @@ class CartManager {
           where: { id: item.id },
           raw: true,
         });
-        allItems.push(singleItem);
+
+        singleItem && allItems.push(singleItem);
       });
+
       await Promise.all(allItemToAdd);
 
       // adds all items to cart

@@ -21,7 +21,7 @@
       "description": "cart APIs"
     }
   ],
-  "schemes": ["https", "http"],
+  "schemes": ["http", "https"],
   "consumes": ["application/json", "application/xml"],
   "produces": ["application/json", "application/xml"],
   "definitions": {
@@ -65,26 +65,14 @@
         }
       }
     },
-    "item": {
-      "required": ["name", "status", "quantity", "price", "description"],
+    "single_item": {
+      "type": "object",
       "properties": {
-        "name": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
+        "id": {
+          "type": "integer"
         },
         "quantity": {
-          "type": "number"
-        },
-        "price": {
-          "type": "number"
-        },
-        "description": {
-          "type": "string"
-        },
-        "image": {
-          "type": "file"
+          "type": "integer"
         }
       }
     },
@@ -108,7 +96,10 @@
       "required": ["items"],
       "properties": {
         "items": {
-          "type": "string"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/single_item"
+          }
         }
       }
     }
@@ -176,6 +167,8 @@
       "post": {
         "tags": ["Item"],
         "description": "Add item",
+        "consumes": ["multipart/form-data"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "authorization",
@@ -184,13 +177,46 @@
             "require": true
           },
           {
-            "name": "body",
-            "in": "body",
-            "description": "add item",
-            "require": true,
-            "schema": {
-              "$ref": "#/definitions/item"
-            }
+            "name": "name",
+            "in": "formData",
+            "description": "item name",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "formData",
+            "description": "item status(available, sold, or expired)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "quantity",
+            "in": "formData",
+            "description": "item quantity",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "description",
+            "in": "formData",
+            "description": "item description",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "in": "formData",
+            "description": "item price",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "description": "item image",
+            "required": false,
+            "type": "file"
           }
         ],
         "responses": {
@@ -421,9 +447,9 @@
           {
             "name": "body",
             "in": "body",
-            "description": "item quantity",
+            "description": "",
+            "required": true,
             "schema": {
-              "type": "array",
               "$ref": "#/definitions/cart_items"
             }
           }

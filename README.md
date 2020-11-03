@@ -45,6 +45,10 @@ yarn migrate:db
 - Start the app
 
 ```
+yarn build
+```
+
+```
 yarn start
 ```
 
